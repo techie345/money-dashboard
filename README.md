@@ -46,6 +46,10 @@ npm run test:watch  # Run Vitest in watch mode
 - `src/styles/` contains design tokens and global responsive styles.
 - `docs/superpowers/` contains the product design and implementation plan.
 
+## CI and Automation
+
+The project includes GitHub Actions workflows for pushes and pull requests. The CI workflow installs dependencies, runs the full test suite, type-checks the app, and builds the production bundle.
+
 ## Data and Privacy
 
 All financial data stays in the browser. Transactions and account data are stored in IndexedDB under the `interactive-moneys` database. Preferences and merchant rules use localStorage. Imported files are parsed locally and are not uploaded.
