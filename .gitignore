@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# Local tooling state
+.superpowers/
+
 # Build output
 /dist/
 /build/
