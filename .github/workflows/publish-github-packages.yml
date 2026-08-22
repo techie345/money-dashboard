@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - 'v*'
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -16,6 +18,20 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7.0.1
+
+      - name: Resolve release tag from GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            TAG_NAME="${{ github.event.release.tag_name }}"
+          else
+            TAG_NAME="${GITHUB_REF_NAME}"
+          fi
+
+          gh api repos/${{ github.repository }}/releases/tags/${TAG_NAME} --jq '.tag_name' > /tmp/release-tag.txt
+          echo "TAG_NAME=${TAG_NAME}" >> "$GITHUB_ENV"
+          echo "Resolved tag: $(cat /tmp/release-tag.txt)"
 
       - name: Set up Node.js
         uses: actions/setup-node@v7.0.0
@@ -35,6 +51,12 @@ jobs:
 
       - name: Build app
         run: npm run build
+
+      - name: Set package version from tag
+        run: |
+          VERSION="${TAG_NAME#v}"
+          npm version "$VERSION" --no-git-tag-version
+          echo "Package version set to: $(node -p \"require('./package.json').version\")"
 
       - name: Publish package to GitHub Packages
         run: npm publish
