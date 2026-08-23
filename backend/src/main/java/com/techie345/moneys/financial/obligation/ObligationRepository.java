@@ -1,0 +1,1 @@
+package com.techie345.moneys.financial.obligation; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface ObligationRepository extends JpaRepository<ObligationEntity,UUID>{List<ObligationEntity> findAllByOwnerId(UUID o); Optional<ObligationEntity> findByIdAndOwnerId(UUID id,UUID o);}

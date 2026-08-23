@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: interactive-moneys-backend
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:false}
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: ${SESSION_SCHEMA_INITIALIZE:always}
+    timeout: ${SESSION_TIMEOUT:30m}
+
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: framework
+  error:
+    include-message: never
+    include-stacktrace: never
+
+management:
+  server:
+    address: ${MANAGEMENT_ADDRESS:127.0.0.1}
+    port: ${MANAGEMENT_PORT:8081}
+  endpoints:
+    web:
+      exposure:
+        include: ${MANAGEMENT_ENDPOINTS:health,info,metrics}
+  endpoint:
+    health:
+      show-details: never
+
+app:
+  financial:
+    api:
+      enabled: ${FINANCIAL_API_ENABLED:true}
+  imports:
+    enabled: "${IMPORTS_ENABLED:false}"
+  database:
+    enabled: ${DATABASE_ENABLED:true}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/moneys}
+    username: ${DATABASE_USERNAME:moneys}
+    password: ${DATABASE_PASSWORD:}
+    pool-size: ${DATABASE_POOL_SIZE:10}
+  session:
+    timeout: ${SESSION_TIMEOUT:30m}
+    cookie-name: ${SESSION_COOKIE_NAME:MONEYS_SESSION}
+    secure-cookie: ${SESSION_SECURE_COOKIE:false}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+    allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PATCH,PUT,DELETE,OPTIONS}
+    allowed-headers: ${CORS_ALLOWED_HEADERS:Content-Type,X-CSRF-TOKEN}
+    allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
+  limits:
+    max-upload-bytes: ${MAX_UPLOAD_BYTES:10485760}
+    max-page-size: ${MAX_PAGE_SIZE:100}
+
+logging:
+  pattern:
+    console: '%d{ISO8601} %-5level [%X{requestId:-}] %logger{36} - %msg%n'
+  level:
+    root: ${LOG_LEVEL:INFO}
+    org.springframework.security: ${SECURITY_LOG_LEVEL:WARN}

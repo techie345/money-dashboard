@@ -1,0 +1,1 @@
+package com.techie345.moneys.financial.rule; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface RuleRepository extends JpaRepository<RuleEntity,UUID>{List<RuleEntity> findAllByOwnerId(UUID o); Optional<RuleEntity> findByIdAndOwnerId(UUID id,UUID o);}

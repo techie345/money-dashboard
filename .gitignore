@@ -11,6 +11,11 @@ node_modules/
 coverage/
 *.tsbuildinfo
 
+# Backend (Gradle) build output
+backend/build/
+backend/.gradle/
+backend/out/
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

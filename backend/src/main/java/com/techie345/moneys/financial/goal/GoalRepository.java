@@ -1,0 +1,1 @@
+package com.techie345.moneys.financial.goal; import java.util.*; import org.springframework.data.jpa.repository.JpaRepository; public interface GoalRepository extends JpaRepository<GoalEntity,UUID>{List<GoalEntity> findAllByOwnerId(UUID o); Optional<GoalEntity> findByIdAndOwnerId(UUID id,UUID o);}

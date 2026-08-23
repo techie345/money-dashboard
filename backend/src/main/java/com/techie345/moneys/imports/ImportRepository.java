@@ -1,0 +1,3 @@
+package com.techie345.moneys.imports;
+import java.util.*; import org.springframework.data.jpa.repository.*; import org.springframework.data.repository.query.Param;
+public interface ImportRepository extends JpaRepository<ImportEntity,UUID>{Optional<ImportEntity> findByIdAndOwnerId(UUID id,UUID ownerId); @Modifying(clearAutomatically=true,flushAutomatically=true) @Query("update ImportEntity i set i.status='COMMITTED', i.version=i.version+1 where i.id=:id and i.ownerId=:owner and i.status='PREVIEW' and i.version=:version") int claimForCommit(@Param("id") UUID id,@Param("owner") UUID owner,@Param("version") long version);}
