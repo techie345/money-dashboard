@@ -61,9 +61,4 @@
 
 ## Execution Handoff
 
-Plan complete and saved to `docs/superpowers/plans/2026-08-23-task-6-audit-sync.md`. Two execution options:
-
-1. **Subagent-Driven (recommended)** - Dispatch a fresh subagent per task and review between tasks for fast iteration.
-2. **Inline Execution** - Execute the tasks in this session using executing-plans with batch checkpoints for review.
-
-Which approach?
+Task 6 is complete and committed as part of `38fa0af`; its REST Docs follow-up (Task 6a) is complete and committed as `4f31bea`. Continue with Tasks 7–9 in `docs/superpowers/plans/2026-08-23-finance-api-backend.md`.

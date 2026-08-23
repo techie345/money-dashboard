@@ -16,7 +16,7 @@
 
 ## Session Progress (updated 2026-08-23)
 
-Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 are implemented and committed in `38fa0af` (`feat: secure backend and add audit sync`). The push is pending because this environment has no GitHub credentials.
+Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 are implemented and committed in `38fa0af` (`feat: secure backend and add audit sync`), and Task 6a is committed in `4f31bea` (`docs: generate api contracts from tests`). Both commits are pushed to `origin/add_api` over SSH.
 
 | Task | Status |
 |------|--------|
@@ -27,13 +27,13 @@ Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 
 | 4 — Import pipeline | Done incl. preview non-mutation, rules, duplicates w/ commit-time races, staging expiry, idempotent transactional commit, committed |
 | 5 — Google OIDC security | Done incl. CSRF, CORS restrictions, CurrentUser integration, JDBC sessions, `/me` and `/profile`, committed |
 | 6 — Audit events + cursor sync | Done incl. transactional audit snapshots, owner-scoped sequences, tombstones, bounded cursor sync, committed |
-| 6a — REST Docs | Done, verified; not committed |
+| 6a — REST Docs | Done, verified, and committed |
 | 7–9 — Frontend conversion, import UI, deployment | Out of scope this session, untouched |
 
 ### Current handoff and loose ends
 
 - **Verification** — `JAVA_HOME=/usr/lib/jvm/java-21-openjdk PATH=/usr/lib/jvm/java-21-openjdk/bin:$PATH gradle clean test` passes with 72 tests and 0 failures; `gradle build` also passes.
-- **Push** — commit `38fa0af` is local on `add_api`; `git push -u origin add_api` is blocked by missing GitHub credentials.
+- **Push** — commits `38fa0af` and `4f31bea` are pushed to `origin/add_api` over SSH.
 - **Gradle wrapper absent** — all documented `./gradlew` commands fail until `gradle wrapper` is generated and committed.
 - **Task 3 residual edge case** — a database-level optimistic-lock race cannot currently include the conflicting representation in its `409` response because Spring's exception does not retain that entity; explicit `If-Match` conflicts do include the current DTO.
 - **Task 4 residual gaps** — transactional rollback/uniqueness-race integration tests against real PostgreSQL are thin (service tests mock repositories); CSV provider set is generic-only (institution-specific providers deferred); preview issue values are truncated but not semantically redacted.
@@ -50,8 +50,15 @@ Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 
 
 ### Suggested resume order
 
-1. Push commit `38fa0af` after configuring GitHub credentials.
-2. Implement Tasks 7–9 for frontend API conversion, server-owned import UI, deployment, CI, and end-to-end verification.
+1. Implement Task 7 for the typed frontend API client and server-backed application bootstrap.
+2. Implement Task 8 for the server-owned import preview and commit workflow.
+3. Implement Task 9 for local deployment, CI, documentation, and end-to-end verification.
+
+### Handoff for Tasks 7–9
+
+The backend foundation is complete through Task 6a and is available on the pushed `add_api` branch. Begin with Task 7 in this plan. Keep the backend as the source of truth: the frontend should retain only UI state and an optional cache, use authenticated API calls, preserve privacy masking, and leave financial calculations on the server.
+
+Task 8 depends on the API client from Task 7 and must preserve import preview non-mutation, duplicate visibility, explicit commit confirmation, and source/audit metadata. Task 9 follows the frontend conversion and should validate the complete authenticated import and synchronization workflow without calling live Google or financial-provider services.
 
 ---
 
