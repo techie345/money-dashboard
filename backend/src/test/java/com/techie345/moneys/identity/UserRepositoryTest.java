@@ -30,7 +30,7 @@ class UserRepositoryTest {
         registry.add("app.database.username", POSTGRES::getUsername);
         registry.add("app.database.password", POSTGRES::getPassword);
         registry.add("app.database.enabled", () -> "true");
-        registry.add("spring.session.jdbc.initialize-schema", () -> "always");
+        registry.add("spring.session.jdbc.initialize-schema", () -> "never");
     }
 
     @Autowired

@@ -14,7 +14,7 @@ spring:
   session:
     store-type: jdbc
     jdbc:
-      initialize-schema: ${SESSION_SCHEMA_INITIALIZE:always}
+       initialize-schema: ${SESSION_SCHEMA_INITIALIZE:never}
     timeout: ${SESSION_TIMEOUT:30m}
 
 server:

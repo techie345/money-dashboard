@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 @WebMvcTest(controllers = SecurityConfigTest.ProbeController.class)
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, SecurityConfigTest.ProbeController.class})
 @TestPropertySource(properties = {
         "app.database.enabled=false",
         "app.cors.allowed-origins=https://app.example",
@@ -30,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
         "spring.security.oauth2.client.provider.google.authorization-uri=https://accounts.example/auth",
         "spring.security.oauth2.client.provider.google.token-uri=https://accounts.example/token",
         "spring.security.oauth2.client.provider.google.jwk-set-uri=https://accounts.example/jwks",
-        "spring.security.oauth2.client.provider.google.issuer-uri=https://accounts.example"
 })
 class SecurityConfigTest {
     @Autowired MockMvc mockMvc;
@@ -67,7 +66,7 @@ class SecurityConfigTest {
 
     @RestController
     @RequestMapping("/api/v1/security-probe")
-    static class ProbeController {
+    public static class ProbeController {
         @GetMapping String get() { return "ok"; }
         @PostMapping String post() { return "ok"; }
     }

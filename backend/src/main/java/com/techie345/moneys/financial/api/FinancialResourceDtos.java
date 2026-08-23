@@ -12,7 +12,8 @@ import jakarta.validation.constraints.NotNull;
 
 public final class FinancialResourceDtos {
     private FinancialResourceDtos() { }
-    public record ApiError(String code, String message, java.util.Map<String, String> fields) { }
+    public record ApiError(int status, String code, String message, java.util.List<Object> details,
+                           String traceId, java.time.Instant timestamp) { }
 
     public record AccountRequest(
             @NotBlank String institution,

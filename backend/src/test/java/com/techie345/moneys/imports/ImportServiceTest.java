@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import org.mockito.InOrder;
 
 import com.techie345.moneys.financial.CategorySource;
 import com.techie345.moneys.financial.TransactionKind;
@@ -12,6 +13,8 @@ import com.techie345.moneys.financial.rule.RuleRepository;
 import com.techie345.moneys.financial.transaction.TransactionRepository;
 import com.techie345.moneys.financial.transaction.TransactionEntity;
 import com.techie345.moneys.imports.provider.*;
+import com.techie345.moneys.audit.AuditService;
+import com.techie345.moneys.audit.ChangeOperation;
 import java.time.Instant;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,6 +32,7 @@ class ImportServiceTest {
     private final ProviderRegistry registry = mock(ProviderRegistry.class);
     private final ObjectMapper mapper = new ObjectMapper();
     private final ImportService service = new ImportService(imports, audits, transactions, rules, accounts, registry, mapper);
+    private final AuditService audit = mock(AuditService.class);
     private final UUID owner = UUID.randomUUID();
     private final UUID account = UUID.randomUUID();
 
@@ -41,6 +45,21 @@ class ImportServiceTest {
 
         assertEquals(1, response.preview().candidates().size());
         verifyNoInteractions(accounts, transactions, audits, rules);
+    }
+
+    @Test
+    void discardWritesOneImportTombstoneWithImportReference() throws Exception {
+        ImportEntity staged = staged("PREVIEW", normalized(candidate(null), List.of()));
+        when(imports.findByIdAndOwnerId(staged.getId(), owner)).thenReturn(java.util.Optional.of(staged));
+        ImportService audited = new ImportService(imports, audits, transactions, rules, accounts, registry, mapper, audit);
+
+        audited.discard(staged.getId(), owner);
+
+        InOrder order = inOrder(staged, imports, audit);
+        order.verify(staged).discard();
+        order.verify(imports).saveAndFlush(staged);
+        order.verify(audit).recordEntity(staged, ChangeOperation.DELETED, staged.getId());
+        verify(audit, times(1)).recordEntity(any(), any(), any());
     }
 
     @Test

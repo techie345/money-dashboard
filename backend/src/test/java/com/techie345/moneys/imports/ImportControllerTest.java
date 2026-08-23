@@ -8,6 +8,7 @@ import static org.mockito.Mockito.*;
 import java.util.UUID;
 import java.util.List;
 import com.techie345.moneys.imports.provider.*;
+import com.techie345.moneys.identity.CurrentUserArgumentResolver;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ImportController.class)
 @TestPropertySource(properties = {"app.database.enabled=false", "app.imports.enabled=true", "app.financial.api.enabled=true"})
+@org.springframework.context.annotation.Import(CurrentUserArgumentResolver.class)
 class ImportControllerTest {
     @Autowired MockMvc mockMvc;
     @MockitoBean ImportService service;
