@@ -25,13 +25,14 @@ Executed on branch `add_api` via subagent-driven development. All backend work e
 | 2 — PostgreSQL schema/users | Done, Testcontainers tests pass (commit pending) |
 | 3 — Financial domain + CRUD | Done incl. snapshots CRUD, ETags/If-Match, error contract, dashboard calc endpoints (commit pending) |
 | 4 — Import pipeline | Done incl. preview non-mutation, rules, duplicates w/ commit-time races, staging expiry, idempotent transactional commit (commit pending) |
-| 5 — Google OIDC security | **Not started** |
+| 5 — Google OIDC security | **Partially started** — `SecurityConfig` (permitAll health/OAuth, authenticated `/api/v1/**`, cookie CSRF, OAuth2 login) and `OidcUserService` exist with unit tests from an interrupted dispatch; unverified end-to-end, session JDBC persistence, CurrentUser/security-context integration, CORS origin tests, and most plan steps remain |
 | 6 — Audit events + cursor sync | **Not started** (dashboard query endpoints already delivered by Task 3; audit tables/services and `/api/v1/sync` cursor remain) |
 | 6a — REST Docs | Not started |
 | 7–9 — Frontend conversion, import UI, deployment | Out of scope this session, untouched |
 
 ### In-progress / loose ends at pause
 
+- **Task 5 partial start** — `identity/SecurityConfig.java`, `identity/OidcUserService.java`, and their unit tests were written by an interrupted subagent before verification; treat as unproven. Resume Task 5 by running the security tests, then complete remaining steps (session JDBC persistence test, CurrentUser integration replacing any principal hacks, CORS origin behavior tests).
 - **No commits yet** — every completed step above exists only as uncommitted working-tree changes on `add_api`.
 - **Gradle wrapper absent** — all documented `./gradlew` commands fail until `gradle wrapper` is generated and committed.
 - **Task 3 final approval pass pending** — snapshot CRUD, weak-ETag rejection, composite owner/account FKs, entity invariants, and net-worth/liability fixes were applied after the last reviews, but no reviewer has confirmed compliance since.
