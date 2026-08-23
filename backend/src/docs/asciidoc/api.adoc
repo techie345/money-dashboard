@@ -1,0 +1,69 @@
+= Interactive Moneys API
+:toc:
+
+== Contract
+
+This documentation is generated from MockMvc contract tests. Request and response examples use synthetic identifiers and sample values only; secrets and real financial records are never included.
+
+=== Authentication
+
+include::{snippets}/authentication-status/http-response.adoc[]
+include::{snippets}/authentication-status/response-fields.adoc[]
+
+=== Accounts
+
+include::{snippets}/account-create/http-request.adoc[]
+include::{snippets}/account-create/request-fields.adoc[]
+include::{snippets}/account-create/http-response.adoc[]
+include::{snippets}/account-create/response-headers.adoc[]
+include::{snippets}/account-create/response-fields.adoc[]
+include::{snippets}/account-read/http-response.adoc[]
+include::{snippets}/account-read/response-fields.adoc[]
+include::{snippets}/account-update/http-request.adoc[]
+include::{snippets}/account-update/request-headers.adoc[]
+include::{snippets}/account-update/request-fields.adoc[]
+include::{snippets}/account-update/http-response.adoc[]
+include::{snippets}/account-update/response-headers.adoc[]
+include::{snippets}/account-update/response-fields.adoc[]
+include::{snippets}/account-delete/http-request.adoc[]
+include::{snippets}/account-delete/request-headers.adoc[]
+
+=== Transactions
+
+include::{snippets}/transaction-validation/http-request.adoc[]
+include::{snippets}/transaction-validation/request-fields.adoc[]
+include::{snippets}/transaction-validation/http-response.adoc[]
+include::{snippets}/transaction-validation/response-fields.adoc[]
+
+=== Dashboard
+
+include::{snippets}/dashboard-overview/http-request.adoc[]
+include::{snippets}/dashboard-overview/http-response.adoc[]
+include::{snippets}/dashboard-overview/response-fields.adoc[]
+
+=== Imports
+
+include::{snippets}/import-create/http-request.adoc[]
+include::{snippets}/import-create/query-parameters.adoc[]
+include::{snippets}/import-create/request-parts.adoc[]
+include::{snippets}/import-create/response-fields.adoc[]
+include::{snippets}/import-preview/http-response.adoc[]
+include::{snippets}/import-preview/response-fields.adoc[]
+include::{snippets}/import-commit/http-request.adoc[]
+include::{snippets}/import-commit/request-fields.adoc[]
+include::{snippets}/import-commit/http-response.adoc[]
+include::{snippets}/import-commit/response-fields.adoc[]
+
+=== Errors
+
+include::{snippets}/version-conflict/http-response.adoc[]
+include::{snippets}/version-conflict/request-headers.adoc[]
+include::{snippets}/version-conflict/request-fields.adoc[]
+include::{snippets}/version-conflict/response-fields.adoc[]
+
+=== Synchronization
+
+include::{snippets}/sync-cursor/http-request.adoc[]
+include::{snippets}/sync-cursor/query-parameters.adoc[]
+include::{snippets}/sync-cursor/http-response.adoc[]
+include::{snippets}/sync-cursor/response-fields.adoc[]

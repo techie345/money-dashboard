@@ -50,6 +50,8 @@ npm run test:watch  # Run Vitest in watch mode
 
 The project includes GitHub Actions workflows for pushes and pull requests. The CI workflow installs dependencies, runs the full test suite, type-checks the app, and builds the production bundle.
 
+The backend API reference is generated from MockMvc contract tests with Spring REST Docs. Run `JAVA_HOME=/usr/lib/jvm/java-21-openjdk gradle test asciidoctor` from `backend`; the generated HTML is written to `backend/build/docs/asciidoc/api.html` and packaged into the backend JAR under `static/docs/`.
+
 ## Data and Privacy
 
 All financial data stays in the browser. Transactions and account data are stored in IndexedDB under the `interactive-moneys` database. Preferences and merchant rules use localStorage. Imported files are parsed locally and are not uploaded.

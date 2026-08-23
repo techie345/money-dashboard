@@ -16,7 +16,7 @@ java {
 
 ext {
     set('springModulithVersion', '2.1.0')
-    set('springRestdocsVersion', '3.0.6')
+    set('springRestdocsVersion', '4.0.1')
     set('testcontainersVersion', '1.21.3')
 }
 
@@ -59,11 +59,16 @@ tasks.named('test') {
 tasks.named('asciidoctor') {
     dependsOn tasks.named('test')
     inputs.dir file("${layout.buildDirectory.get()}/generated-snippets")
+    attributes 'snippets': file("${layout.buildDirectory.get()}/generated-snippets")
     sources {
         include '**/*.adoc'
     }
 }
 
 tasks.named('bootJar') {
+    dependsOn tasks.named('asciidoctor')
     archiveFileName = 'money-backend.jar'
+    from(tasks.named('asciidoctor')) {
+        into 'static/docs'
+    }
 }

@@ -6,7 +6,7 @@
 
 **Architecture:** Build a modular monolith in a new `backend/` application. Keep identity, financial resources, imports, calculations, sync, and audit behind package boundaries, with PostgreSQL as the canonical store and REST DTOs as the frontend contract. Convert the existing frontend from local dataset ownership to an authenticated API client while retaining only a cache and UI state in IndexedDB.
 
-**Tech Stack:** Java 21, Spring Boot 4.1.1, Spring Framework 7.0.x, Spring Security 7.1.1, Spring Modulith 2.1.0, Spring Session JDBC 4.1.1, Spring MVC, Spring Data JPA, PostgreSQL, Flyway, Actuator, Spring REST Docs 3.0.6, Testcontainers, Gradle 9.x, React 19, TypeScript, Vite, Vitest.
+**Tech Stack:** Java 21, Spring Boot 4.1.1, Spring Framework 7.0.x, Spring Security 7.1.1, Spring Modulith 2.1.0, Spring Session JDBC 4.1.1, Spring MVC, Spring Data JPA, PostgreSQL, Flyway, Actuator, Spring REST Docs 4.0.1, Testcontainers, Gradle 9.x, React 19, TypeScript, Vite, Vitest.
 
 **Version research:** As of 2026-08-23, official Spring pages list Spring Boot 4.1.1, Spring Security 7.1.0 on its project page and 7.1.1 in the current reference documentation, Spring Modulith 2.1.0, and Spring Session 4.1.1. Use the latest stable patch available from Spring Initializr/BOM at scaffold time if a newer patch exists, never a milestone or snapshot. Boot 4.1.1 requires Java 17+ and supports Gradle 8.14+ or 9.x; Java 21 is selected for LTS stability.
 
@@ -27,7 +27,7 @@ Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 
 | 4 — Import pipeline | Done incl. preview non-mutation, rules, duplicates w/ commit-time races, staging expiry, idempotent transactional commit, committed |
 | 5 — Google OIDC security | Done incl. CSRF, CORS restrictions, CurrentUser integration, JDBC sessions, `/me` and `/profile`, committed |
 | 6 — Audit events + cursor sync | Done incl. transactional audit snapshots, owner-scoped sequences, tombstones, bounded cursor sync, committed |
-| 6a — REST Docs | Not started |
+| 6a — REST Docs | Done, verified; not committed |
 | 7–9 — Frontend conversion, import UI, deployment | Out of scope this session, untouched |
 
 ### Current handoff and loose ends
@@ -37,7 +37,7 @@ Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 
 - **Gradle wrapper absent** — all documented `./gradlew` commands fail until `gradle wrapper` is generated and committed.
 - **Task 3 residual edge case** — a database-level optimistic-lock race cannot currently include the conflicting representation in its `409` response because Spring's exception does not retain that entity; explicit `If-Match` conflicts do include the current DTO.
 - **Task 4 residual gaps** — transactional rollback/uniqueness-race integration tests against real PostgreSQL are thin (service tests mock repositories); CSV provider set is generic-only (institution-specific providers deferred); preview issue values are truncated but not semantically redacted.
-- **README not updated** — still describes browser-local-only architecture; update together with Tasks 7–9 or before merge.
+- **README** — documents the generated backend API reference; the broader browser-local architecture text remains until Tasks 7–9.
 - **CI** — `.github/workflows/backend-build.yml` (Task 9) does not exist; frontend CI does not run backend checks.
 
 ### Environment notes for resuming
@@ -51,8 +51,7 @@ Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 
 ### Suggested resume order
 
 1. Push commit `38fa0af` after configuring GitHub credentials.
-2. Implement Task 6a (REST Docs) if API contract documentation is required next.
-3. Implement Tasks 7–9 for frontend API conversion, server-owned import UI, deployment, CI, and end-to-end verification.
+2. Implement Tasks 7–9 for frontend API conversion, server-owned import UI, deployment, CI, and end-to-end verification.
 
 ---
 
@@ -402,21 +401,21 @@ git commit -m "feat: add dashboard queries and sync"
 - Create: `backend/src/test/java/com/techie345/moneys/api/ApiDocumentationTest.java`
 - Modify: `README.md`
 
-- [ ] **Step 1: Add REST Docs configuration**
+- [x] **Step 1: Add REST Docs configuration**
 
 Configure the Gradle Asciidoctor task to consume `build/generated-snippets`, run after tests, and package generated HTML documentation without embedding secrets or real financial records.
 
-- [ ] **Step 2: Document representative API contracts**
+- [x] **Step 2: Document representative API contracts**
 
 Use MockMvc tests with Spring REST Docs for authentication status, account CRUD, transaction validation, dashboard overview, import preview/commit, `409` conflict, and sync cursor responses. Assert status, headers, request fields, response fields, and error fields in the test so undocumented contract changes fail CI.
 
-- [ ] **Step 3: Build documentation**
+- [x] **Step 3: Build documentation (verified with system Gradle)**
 
-Run: `cd backend && ./gradlew test asciidoctor`
+The Gradle wrapper is absent, so `./gradlew test asciidoctor` could not run. `JAVA_HOME=/usr/lib/jvm/java-21-openjdk gradle test asciidoctor` passed using system Gradle.
 
-Expected: PASS and generated documentation under `backend/build/asciidoc/html5`.
+Expected: PASS and generated documentation under `backend/build/docs/asciidoc`.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 4: Commit** (deferred; do not commit unless explicitly requested)
 
 ```bash
 git add backend README.md
