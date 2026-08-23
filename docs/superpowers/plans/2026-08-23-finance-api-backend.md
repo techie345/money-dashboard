@@ -16,28 +16,27 @@
 
 ## Session Progress (updated 2026-08-23)
 
-Executed on branch `add_api` via subagent-driven development. All backend work exists as **uncommitted changes** (`backend/` is untracked; this plan doc is untracked). No task commit steps have been run yet.
+Executed on branch `add_api` via subagent-driven development. Tasks 1 through 6 are implemented and committed in `38fa0af` (`feat: secure backend and add audit sync`). The push is pending because this environment has no GitHub credentials.
 
 | Task | Status |
 |------|--------|
-| 1 — Scaffold | Done (implementation + tests pass; commit pending) |
-| 1a — Modulith/config/actuator | Done (commit pending) |
-| 2 — PostgreSQL schema/users | Done, Testcontainers tests pass (commit pending) |
-| 3 — Financial domain + CRUD | Done incl. snapshots CRUD, ETags/If-Match, error contract, dashboard calc endpoints (commit pending) |
-| 4 — Import pipeline | Done incl. preview non-mutation, rules, duplicates w/ commit-time races, staging expiry, idempotent transactional commit (commit pending) |
-| 5 — Google OIDC security | **Partially started** — `SecurityConfig` (permitAll health/OAuth, authenticated `/api/v1/**`, cookie CSRF, OAuth2 login) and `OidcUserService` exist with unit tests from an interrupted dispatch; unverified end-to-end, session JDBC persistence, CurrentUser/security-context integration, CORS origin tests, and most plan steps remain |
-| 6 — Audit events + cursor sync | **Not started** (dashboard query endpoints already delivered by Task 3; audit tables/services and `/api/v1/sync` cursor remain) |
+| 1 — Scaffold | Done and committed |
+| 1a — Modulith/config/actuator | Done and committed |
+| 2 — PostgreSQL schema/users | Done, Testcontainers tests pass, committed |
+| 3 — Financial domain + CRUD | Done incl. snapshots CRUD, ETags/If-Match, error contract, dashboard calc endpoints, committed |
+| 4 — Import pipeline | Done incl. preview non-mutation, rules, duplicates w/ commit-time races, staging expiry, idempotent transactional commit, committed |
+| 5 — Google OIDC security | Done incl. CSRF, CORS restrictions, CurrentUser integration, JDBC sessions, `/me` and `/profile`, committed |
+| 6 — Audit events + cursor sync | Done incl. transactional audit snapshots, owner-scoped sequences, tombstones, bounded cursor sync, committed |
 | 6a — REST Docs | Not started |
 | 7–9 — Frontend conversion, import UI, deployment | Out of scope this session, untouched |
 
-### In-progress / loose ends at pause
+### Current handoff and loose ends
 
-- **Task 5 partial start** — `identity/SecurityConfig.java`, `identity/OidcUserService.java`, and their unit tests were written by an interrupted subagent before verification; treat as unproven. Resume Task 5 by running the security tests, then complete remaining steps (session JDBC persistence test, CurrentUser integration replacing any principal hacks, CORS origin behavior tests).
-- **No commits yet** — every completed step above exists only as uncommitted working-tree changes on `add_api`.
+- **Verification** — `JAVA_HOME=/usr/lib/jvm/java-21-openjdk PATH=/usr/lib/jvm/java-21-openjdk/bin:$PATH gradle clean test` passes with 72 tests and 0 failures; `gradle build` also passes.
+- **Push** — commit `38fa0af` is local on `add_api`; `git push -u origin add_api` is blocked by missing GitHub credentials.
 - **Gradle wrapper absent** — all documented `./gradlew` commands fail until `gradle wrapper` is generated and committed.
-- **Task 3 final approval pass pending** — snapshot CRUD, weak-ETag rejection, composite owner/account FKs, entity invariants, and net-worth/liability fixes were applied after the last reviews, but no reviewer has confirmed compliance since.
+- **Task 3 residual edge case** — a database-level optimistic-lock race cannot currently include the conflicting representation in its `409` response because Spring's exception does not retain that entity; explicit `If-Match` conflicts do include the current DTO.
 - **Task 4 residual gaps** — transactional rollback/uniqueness-race integration tests against real PostgreSQL are thin (service tests mock repositories); CSV provider set is generic-only (institution-specific providers deferred); preview issue values are truncated but not semantically redacted.
-- **Task 6 partial** — dashboard calculation endpoints exist (built during Task 3), but audit event recording, audit tables wiring into mutations, change-sequence columns, tombstones, and `GET /api/v1/sync` are unimplemented (`audit/` and `sync/` are package markers only).
 - **README not updated** — still describes browser-local-only architecture; update together with Tasks 7–9 or before merge.
 - **CI** — `.github/workflows/backend-build.yml` (Task 9) does not exist; frontend CI does not run backend checks.
 
@@ -51,9 +50,9 @@ Executed on branch `add_api` via subagent-driven development. All backend work e
 
 ### Suggested resume order
 
-1. Re-run `gradle clean test` to confirm baseline.
-2. Implement Task 5 (security), then Task 6 (audit + sync), then 6a if desired.
-3. Run spec + quality reviews per task, then execute all pending commit steps (or one consolidated commit).
+1. Push commit `38fa0af` after configuring GitHub credentials.
+2. Implement Task 6a (REST Docs) if API contract documentation is required next.
+3. Implement Tasks 7–9 for frontend API conversion, server-owned import UI, deployment, CI, and end-to-end verification.
 
 ---
 
